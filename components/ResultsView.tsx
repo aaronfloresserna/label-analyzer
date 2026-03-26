@@ -1,44 +1,47 @@
 'use client'
 
-import type { LabelElement, MaterialType } from '@/lib/types'
+import type { LabelElement, PrintMaterial } from '@/lib/types'
 import ElementCard from './ElementCard'
 
 interface Props {
   imagePreview: string
   elements: LabelElement[]
   onReset: () => void
-  onElementChange: (index: number, type: MaterialType) => void
-}
-
-function exportJSON(elements: LabelElement[]) {
-  const blob = new Blob([JSON.stringify(elements, null, 2)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'elementos-etiqueta.json'
-  a.click()
-  URL.revokeObjectURL(url)
+  onElementChange: (index: number, material: PrintMaterial | '') => void
 }
 
 export default function ResultsView({ imagePreview, elements, onReset, onElementChange }: Props) {
+  const allFilled = elements.length > 0 && elements.every((el) => el.printMaterial !== '')
+
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-slate-800">Elementos detectados</h1>
           <div className="flex gap-3">
-            <button
-              onClick={onReset}
-              className="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
-            >
-              Nueva imagen
-            </button>
-            <button
-              onClick={() => exportJSON(elements)}
-              className="px-4 py-2 text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 rounded-lg transition-colors"
-            >
-              Exportar JSON
-            </button>
+            {!allFilled && (
+              <>
+                <button
+                  onClick={onReset}
+                  className="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                >
+                  Nueva imagen
+                </button>
+                <button
+                  disabled
+                  className="px-4 py-2 text-sm font-medium text-slate-400 bg-slate-100 border border-slate-200 rounded-lg cursor-not-allowed"
+                >
+                  Enviar
+                </button>
+              </>
+            )}
+            {allFilled && (
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 rounded-lg transition-colors"
+              >
+                Enviar
+              </button>
+            )}
           </div>
         </div>
 

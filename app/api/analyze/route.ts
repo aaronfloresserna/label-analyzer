@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import type { LabelElement, MaterialType } from '@/lib/types'
+import type { LabelElement } from '@/lib/types'
 
 if (!process.env.ANTHROPIC_API_KEY) {
   throw new Error('ANTHROPIC_API_KEY environment variable is not set')
@@ -81,8 +81,8 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       )
     }
-    const elements: LabelElement[] = (rawElements as Omit<LabelElement, 'materialType'>[]).map(
-      (el) => ({ ...el, materialType: el.type as MaterialType })
+    const elements: LabelElement[] = (rawElements as Omit<LabelElement, 'printMaterial'>[]).map(
+      (el) => ({ ...el, printMaterial: '' as const })
     )
 
     return NextResponse.json({

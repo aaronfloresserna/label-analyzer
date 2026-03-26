@@ -4,7 +4,7 @@ import { useState } from 'react'
 import UploadZone from '@/components/UploadZone'
 import AnalyzingView from '@/components/AnalyzingView'
 import ResultsView from '@/components/ResultsView'
-import type { LabelElement, MaterialType, TokenUsage } from '@/lib/types'
+import type { LabelElement, PrintMaterial } from '@/lib/types'
 
 type View = 'upload' | 'analyzing' | 'results'
 
@@ -12,9 +12,7 @@ export default function Page() {
   const [view, setView] = useState<View>('upload')
   const [imagePreview, setImagePreview] = useState('')
   const [elements, setElements] = useState<LabelElement[]>([])
-  const [usage, setUsage] = useState<TokenUsage>({ input_tokens: 0, output_tokens: 0 })
-  const [elapsed, setElapsed] = useState('0')
-  const [error, setError] = useState<string | null>(null)
+const [error, setError] = useState<string | null>(null)
 
   const handleAnalyze = async (base64: string, mediaType: string) => {
     setImagePreview(`data:${mediaType};base64,${base64}`)
@@ -29,8 +27,6 @@ export default function Page() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Error desconocido')
       setElements(data.elements)
-      setUsage(data.usage)
-      setElapsed(data.elapsed)
       setView('results')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al analizar la imagen')
@@ -38,8 +34,8 @@ export default function Page() {
     }
   }
 
-  const handleElementChange = (index: number, type: MaterialType) => {
-    setElements(prev => prev.map((el, i) => i === index ? { ...el, materialType: type } : el))
+  const handleElementChange = (index: number, material: PrintMaterial | '') => {
+    setElements(prev => prev.map((el, i) => i === index ? { ...el, printMaterial: material } : el))
   }
 
   const handleReset = () => {
