@@ -62,8 +62,6 @@ export default function Page() {
         <ResultsView
           imagePreview={imagePreview}
           elements={elements}
-          usage={usage}
-          elapsed={elapsed}
           onReset={handleReset}
           onElementChange={handleElementChange}
         />

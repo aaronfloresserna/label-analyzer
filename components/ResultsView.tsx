@@ -1,14 +1,11 @@
 'use client'
 
-import type { LabelElement, MaterialType, TokenUsage } from '@/lib/types'
+import type { LabelElement, MaterialType } from '@/lib/types'
 import ElementCard from './ElementCard'
-import TokenPanel from './TokenPanel'
 
 interface Props {
   imagePreview: string
   elements: LabelElement[]
-  usage: TokenUsage
-  elapsed: string
   onReset: () => void
   onElementChange: (index: number, type: MaterialType) => void
 }
@@ -23,7 +20,7 @@ function exportJSON(elements: LabelElement[]) {
   URL.revokeObjectURL(url)
 }
 
-export default function ResultsView({ imagePreview, elements, usage, elapsed, onReset, onElementChange }: Props) {
+export default function ResultsView({ imagePreview, elements, onReset, onElementChange }: Props) {
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-6xl mx-auto">
@@ -50,7 +47,6 @@ export default function ResultsView({ imagePreview, elements, usage, elapsed, on
             <div className="bg-white border border-slate-200 rounded-xl p-4">
               <img src={imagePreview} alt="Etiqueta analizada" className="w-full rounded-lg object-contain max-h-72" />
             </div>
-            <TokenPanel inputTokens={usage.input_tokens} outputTokens={usage.output_tokens} elapsed={elapsed} />
             <p className="text-xs text-slate-400 text-center">{elements.length} elementos detectados</p>
           </div>
 
